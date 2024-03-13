@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
-const port = 3000
+const port = 3000 || process.env.PORT
 app.use(express.json())
 app.use('/medicine',require('./API/medicine.api'))
 app.listen(port, () => console.log(`connected , Example app listening on port ${port}!`))
