@@ -5,7 +5,7 @@ module.exports.getMedicine=async(req,res)=>{
     res.json(medicine);
 }
 module.exports.addMedicine=async(req,res)=>{
-    const {name,usage,dosage,sideEffects}=req.body;
-    await medicineModel.insertMany({name,usage,dosage,sideEffects});
+    const {name,usage,dosage,sideEffects,link}=req.body;
+    await medicineModel.insertMany({name,usage,dosage,sideEffects,link});
     res.json({message:'done'});
 }
