@@ -2,7 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 const port = 3000
-app.use(require('cors'));
 app.use(express.json())
 app.use('/users',require('./APIs/user.api'))
 app.use('/medicine',require('./APIs/medicine.api'))
