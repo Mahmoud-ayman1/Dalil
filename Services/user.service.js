@@ -9,7 +9,6 @@ module.exports.signUp=async(req,res)=>{
         res.json({message:"user already exist"});
     }else{
         let token=jwt.sign({email},'dlil');
-        sendEmail({email,token,name});
         bcrypt.hash(password,4,async function(err,hash){
             await userModel.insertMany({name,email,password:hash});
             res.json({message:"signUp done successfully, Please confirm your Email"});
