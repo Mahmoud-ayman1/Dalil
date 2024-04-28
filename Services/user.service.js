@@ -1,7 +1,6 @@
 const userModel=require('../models/user.model');
 const bcrypt=require('bcrypt');
 var jwt = require('jsonwebtoken');
-const { sendEmail } = require('../email/user.email');
 module.exports.signUp=async(req,res)=>{
     const {name,email,password}=req.body;
     let user=await userModel.findOne({email});
