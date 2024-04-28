@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const app = express()
 const port = 3000
 app.use(express.json())
+const cors=require('cors');
+app.use(cors());
 app.use('/users',require('./APIs/user.api'))
 app.use('/medicine',require('./APIs/medicine.api'))
 app.listen(port, () => console.log(`connected , Example app listening on port ${port}!`))
