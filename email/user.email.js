@@ -16,7 +16,7 @@ module.exports.sendEmail=async(options)=>{
                 Hello ${options.name}
             </h1>
             <br>
-            <a href="http://https://dalil-phi.vercel.app/users/verifyEmail/${options.token}">Verify your account from here</a>
+            <a href="https://dalil-phi.vercel.app/users/verifyEmail/${options.token}">Verify your account from here</a>
         `, // html body
     });
 }
