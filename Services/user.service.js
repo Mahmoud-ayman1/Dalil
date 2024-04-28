@@ -23,7 +23,7 @@ module.exports.signIn=async(req,res)=>{
         let match=await bcrypt.compare(password,user.password);
         if(match){
             if(user.emailConfirm){
-                res.json({message:"signIn done successfully",name:username})
+                res.json({message:"signIn done successfully",name:user.name})
             }else{
                 res.json({message:"please verify you account first"});
             }
