@@ -6,13 +6,13 @@ module.exports.signUp=async(req,res)=>{
     const {name,email,password}=req.body;
     let user=await userModel.findOne({email});
     if(user){
-        res.json({message:"user already exist"});
+        res.json({statue:false,message:"user already exist"});
     }else{
         let token=jwt.sign({email},'dlil');
         sendEmail({email,token,name});
         bcrypt.hash(password,4,async function(err,hash){
             await userModel.insertMany({name,email,password:hash});
-            res.json({message:"signUp done successfully, Please confirm your Email"});
+            res.json({statue:true,message:"signUp done successfully, Please confirm your Email"});
         })
     }
 }
@@ -23,18 +23,18 @@ module.exports.signIn=async(req,res)=>{
         let match=await bcrypt.compare(password,user.password);
         if(match){
             if(user.emailConfirm){
-                res.json({message:"signIn done successfully",name:user.name})
+                res.json({statue:true,message:"signIn done successfully",name:user.name})
             }else{
-                res.json({message:"please verify you account first"});
+                res.json({statue:false,message:"please verify you account first"});
             }
         }else{
-            res.json({message:"incorrect Password"})
+            res.json({statue:false,message:"incorrect Password"})
         }
     }else{
-        res.json({message:"user dosn't exist"})
+        res.json({statue:false,message:"user dosn't exist"})
     }
 }
-module.exports.verifyEmail=(req,res)=>{
+module.exports.verifyEmail=async(req,res)=>{
     const {token}=req.params;
     jwt.verify(token,'dlil',async(err,decoded)=>{
         if(err){
@@ -43,10 +43,33 @@ module.exports.verifyEmail=(req,res)=>{
             let user=await userModel.findOne({email:decoded.email});
             if(user){
                 await userModel.findOneAndUpdate({email:decoded.email},{emailConfirm:true});
-                res.json({message:'verified'});
+                res.json({statue:true,message:'verified'});
             }else{
-                res.json({message:"user not found"});
+                res.json({statue:false,message:"user not found"});
             }
         }
     })
+}
+module.exports.resetPassword=async(req,res)=>{
+    const {oldPassword,newPassword,email}=req.body;
+    let user=await userModel.findOne({email});
+    if(user){
+        let match=await bcrypt.compare(oldPassword,user.password);
+        if(match){
+            if(user.emailConfirm){
+                bcrypt.hash(newPassword,4,async function(err,hash){
+                    await userModel.updateOne({email},{password:hash});
+                    console.log(hash);
+                    console.log(newPassword);
+                    res.json({statue:true,message:"password updated succesfully"})
+                })
+            }else{
+                res.json({statue:false,message:"please verify you account first"});
+            }
+        }else{
+            res.json({statue:false,message:"incorrect oldPassword"})
+        }
+    }else{
+        res.json({statue:false,message:"user dosn't exist"})
+    }
 }
