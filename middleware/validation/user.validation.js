@@ -3,8 +3,6 @@ let schema=Joi.object({
     name:Joi.string().required().min(3).max(15),
     email:Joi.string().required().email(),
     password:Joi.string().required().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-    oldPassword:Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-    newPassword:Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
 })
 module.exports.userValidate=(req,res,next)=>{
     let Errors=[];
