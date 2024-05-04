@@ -1,5 +1,6 @@
 const userModel=require('../models/user.model');
 const bcrypt=require('bcrypt');
+const Joi=require('joi');
 var jwt = require('jsonwebtoken');
 const { sendEmail } = require('../email/user.email');
 module.exports.signUp=async(req,res)=>{
@@ -51,25 +52,42 @@ module.exports.verifyEmail=async(req,res)=>{
     })
 }
 module.exports.resetPassword=async(req,res)=>{
-    const {oldPassword,newPassword,email}=req.body;
-    let user=await userModel.findOne({email});
-    if(user){
-        let match=await bcrypt.compare(oldPassword,user.password);
-        if(match){
-            if(user.emailConfirm){
-                bcrypt.hash(newPassword,4,async function(err,hash){
-                    await userModel.updateOne({email},{password:hash});
-                    console.log(hash);
-                    console.log(newPassword);
-                    res.json({statue:true,message:"password updated succesfully"})
-                })
+    let schema=Joi.object({
+        email:Joi.string().required().email(),
+        oldPassword:Joi.string().required().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
+        newPassword:Joi.string().required().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),    
+    })
+    Errors=[];  
+    let {error}=await schema.validate(req.body,{abortEarly:false});
+    if(error){
+        error.details.map((msg)=>{
+            Errors.push(msg.message);
+        })
+    }
+    if(Errors.length>0){
+        console.log(Errors);  
+        res.json(Errors);
+    } else { 
+        const {oldPassword,newPassword,email}=req.body;
+        let user=await userModel.findOne({email});
+        if(user){
+            let match=await bcrypt.compare(oldPassword,user.password);
+            if(match){
+                if(user.emailConfirm){
+                    bcrypt.hash(newPassword,4,async function(err,hash){
+                        await userModel.updateOne({email},{password:hash});
+                        console.log(hash);
+                        console.log(newPassword);
+                        res.json({statue:true,message:"password updated succesfully"})
+                    })
+                }else{
+                    res.json({statue:false,message:"please verify you account first"});
+                }
             }else{
-                res.json({statue:false,message:"please verify you account first"});
+                res.json({statue:false,message:"incorrect oldPassword"})
             }
         }else{
-            res.json({statue:false,message:"incorrect oldPassword"})
+            res.json({statue:false,message:"user dosn't exist"})
         }
-    }else{
-        res.json({statue:false,message:"user dosn't exist"})
     }
 }
