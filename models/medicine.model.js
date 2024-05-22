@@ -6,8 +6,9 @@ const schema=new mongoose.Schema({
     sideEffects:String,
     link:String,
     category:[String],
-    type:String,
-    concentration:String,
-    effectiveMaterial:String
+    amount:String,
+    strength:String,
+    activeIngredient:String,
+    alternative:String
 })
 module.exports=mongoose.model('medicine',schema)
