@@ -6,7 +6,7 @@ app.use(express.json())
 const cors=require('cors');
 app.use(cors());
 app.use('/users',require('./APIs/user.api'))
-app.use('/medicine',require('./APIs/medicine.api'))
+app.use('/medicines',require('./APIs/medicine.api'))
 app.listen(port, () => console.log(`connected , Example app listening on port ${port}!`))
 mongoose.connect('mongodb+srv://dalil:dalil@cluster0.q42qdrh.mongodb.net/')
 .then(()=>{
