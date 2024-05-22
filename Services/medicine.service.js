@@ -9,7 +9,7 @@ module.exports.getMedicine=async(req,res)=>{
     }
 }
 module.exports.addMedicine=async(req,res)=>{
-    const {name,usage,dosage,sideEffects,link,category,type,concentration,effectiveMaterial}=req.body;
-    await medicineModel.insertMany({name,usage,dosage,sideEffects,link,category,type,concentration,effectiveMaterial});
+    const {name,usage,dosage,sideEffects,link,category,amount,strength,activeIngredient,alternative}=req.body;
+    await medicineModel.insertMany({name,usage,dosage,sideEffects,link,category,amount,strength,activeIngredient,alternative});
     res.json({statue:true,message:'done'});
 }
