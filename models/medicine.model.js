@@ -7,6 +7,7 @@ const schema=new mongoose.Schema({
     link:String,
     category:[String],
     type:String,
-    concentration:String
+    concentration:String,
+    effectiveMaterial:String
 })
 module.exports=mongoose.model('medicine',schema)
