@@ -2,10 +2,14 @@ const medicineModel=require('../models/medicine.model')
 module.exports.getMedicine=async(req,res)=>{
     const {name}=req.body;
     let medicine=await medicineModel.findOne({name});
-    res.json(medicine);
+    if(!medicine){
+        res.json({statue:false,message:"medicine not found"});
+    }else{
+        res.json({statue:true,medicine});        
+    }
 }
 module.exports.addMedicine=async(req,res)=>{
-    const {name,usage,dosage,sideEffects,link}=req.body;
-    await medicineModel.insertMany({name,usage,dosage,sideEffects,link});
-    res.json({message:'done'});
+    const {name,usage,dosage,sideEffects,link,category}=req.body;
+    await medicineModel.insertMany({name,usage,dosage,sideEffects,link,category});
+    res.json({statue:true,message:'done'});
 }
