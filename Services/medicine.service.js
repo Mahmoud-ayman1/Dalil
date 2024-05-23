@@ -21,3 +21,8 @@ module.exports.addMedicine=async(req,res)=>{
             res.json({statue:true,message:'done'});        
         }
 }
+module.exports.getMedicineByCategory=async(req,res)=>{
+    const {category}=req.body;
+    let medicine=await medicineModel.find({category});
+    res.json({statue:true,medicine})
+}
