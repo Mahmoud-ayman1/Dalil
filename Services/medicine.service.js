@@ -26,3 +26,9 @@ module.exports.getMedicineByCategory=async(req,res)=>{
     let medicine=await medicineModel.find({category});
     res.json({statue:true,medicine})
 }
+
+module.exports.getMedicineByPrefix=async(req,res)=>{
+    const {prefix}=req.body;
+    let medicines=await medicineModel.find({name:{$regex:new RegExp(`^${prefix}`)}});
+    res.json({statue:true,data:medicines});
+}
