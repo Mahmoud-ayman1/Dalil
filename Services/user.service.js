@@ -1,8 +1,10 @@
 const userModel=require('../models/user.model');
+const historyModel=require('../models/history.model')
 const bcrypt=require('bcrypt');
 const Joi=require('joi');
 var jwt = require('jsonwebtoken');
 const { sendEmail } = require('../email/user.email');
+const medicineModel = require('../models/medicine.model');
 module.exports.signUp=async(req,res)=>{
     const {name,email,password}=req.body;
     let user=await userModel.findOne({email});
@@ -89,5 +91,31 @@ module.exports.resetPassword=async(req,res)=>{
         }else{
             res.json({statue:false,message:"user dosn't exist"})
         }
+    }
+}
+module.exports.getHistory=async(req,res)=>{
+    const{email}=req.body;
+    const user=await userModel.findOne({email});
+    if(user){
+        const History=await historyModel.find({email});
+        res.json({statue:true,data:History});
+    }else{
+        res.json({statue:false,mesage:"user not found"});
+    }
+}
+module.exports.addToHistory=async(req,res)=>{
+    const{email,medicine}=req.body;
+    const user=await userModel.findOne({email});
+    const Medicine=await medicineModel.findOne({name:medicine});
+    console.log(Medicine);
+    if(user&&Medicine){
+        await historyModel.insertMany({email,medicine});
+        res.json({statue:true,message:"added"});
+    }else if(Medicine){
+        res.json({statue:false,mesage:"user not found"});
+    }else if(user){
+        res.json({statue:false,mesage:"medicine not found"});
+    }else{
+        res.json({statue:false,mesage:"user and medicine not found"});
     }
 }
